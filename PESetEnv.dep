@@ -1,0 +1,24 @@
+# Microsoft Developer Studio Generated Dependency File, included by PESetEnv.mak
+
+.\PESetEnv.cpp : \
+	".\UpdatePathVariable.h"\
+	".\version.h"\
+	{$(INCLUDE)}"debug.h"\
+	{$(INCLUDE)}"getopt.h"\
+	{$(INCLUDE)}"Optimize.h"\
+	{$(INCLUDE)}"Stackwalker.h"\
+	{$(INCLUDE)}"SystemMessage.h"\
+	{$(INCLUDE)}"ver_defaults.h"\
+	
+
+.\UpdatePathVariable.cpp : \
+	".\UpdatePathVariable.h"\
+	{$(INCLUDE)}"debug.h"\
+	{$(INCLUDE)}"SystemMessage.h"\
+	
+
+.\PESetEnv.rc : \
+	".\PESetEnv.ico"\
+	".\version.h"\
+	{$(INCLUDE)}"ver_defaults.h"\
+	
