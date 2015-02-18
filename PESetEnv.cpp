@@ -14,6 +14,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 General Public License for more details.
 
 */
+#ifdef _MSC_VER
+#pragma warning(disable:4996)
+#pragma comment(lib, "advapi32.lib")
+#pragma comment(lib, "shell32.lib")
+#pragma comment(lib, "user32.lib")
+#endif
 
 #ifndef WIN32_LEAN_AND_MEAN
 # define WIN32_LEAN_AND_MEAN 1
@@ -23,8 +29,10 @@ General Public License for more details.
 
 #include <windows.h>
 #include <stdio.h>
-#include <atlbase.h> // required for Stackwalker
+#include <stdlib.h>
+//#include <atlbase.h> // required for Stackwalker
 #include <shellapi.h>
+#include <tchar.h>
 
 #include "Stackwalker.h"
 #include "Optimize.h"
@@ -104,7 +112,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			strcat(szCmdLineTemp, " ");
 	}
 
-	for (i = 0; i < argc; ++i)
+	for (int i = 0; i < argc; ++i)
 	{
 		free(argv[i]);
 	}
