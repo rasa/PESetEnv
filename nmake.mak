@@ -1,10 +1,10 @@
 all:
-	$(MAKE)/f PESetEnv.mak CFG="PESetEnv - Win32 Release"	all
-	$(MAKE)/f PESetEnv.mak CFG="PESetEnv - Win32 Debug"	all
+	$(MAKE) /f PESetEnv.mak CFG="PESetEnv - Win32 Release"	all
+	$(MAKE) /f PESetEnv.mak CFG="PESetEnv - Win32 Debug"	all
 
 clean:
-	$(MAKE)/f PESetEnv.mak CFG="PESetEnv - Win32 Release"	clean
-	$(MAKE)/f PESetEnv.mak CFG="PESetEnv - Win32 Debug"	clean
+	$(MAKE) /f PESetEnv.mak CFG="PESetEnv - Win32 Release"	clean
+	$(MAKE) /f PESetEnv.mak CFG="PESetEnv - Win32 Debug"	clean
 
 realclean: clean
 	-cmd /c del /s *.bak

@@ -1,19 +1,4 @@
-/*
-
-$Id$
-
-Copyright (c) 2005-2006 Ross Smith II (http://smithii.com). All rights reserved.
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of version 2 of the GNU General Public License 
-as published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-*/
+// Copyright (c) 2005-2015 Ross Smith II. See Mit LICENSE in /LICENSE
 
 #ifdef _MSC_VER
 #pragma warning(disable:4996)
@@ -55,7 +40,7 @@ int UpdatePathVariable(void)
 	DWORD rv = (DWORD) -1;
 
 	D(("UpdatePathVariable() start"));
-		
+
 	for (;;)
 	{
 		WCHAR szVarName[MAX_VALUE_LEN];
@@ -75,7 +60,7 @@ int UpdatePathVariable(void)
 			break;
 		}
 
-		for (;;) 
+		for (;;)
 		{
 			dwLen = MAX_VALUE_LEN;
 			rv = RegEnumValueW(hKey, i, szVarName, &dwLen, NULL, NULL, NULL, NULL);
@@ -260,10 +245,10 @@ int UpdatePathVariable(void)
 
 	if (szNewPath)
    		free(szNewPath);
-	
+
 	if (szExpandedPath)
    		free(szExpandedPath);
-	
+
 	if (hKey)
 		RegCloseKey(hKey);
 
