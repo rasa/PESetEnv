@@ -79,7 +79,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 				}
                 break;
             case _T('v'):
-				MESSAGEBOXW(L"Copyright (c) 2005, Ross Smith. All Rights Reserved");
+				MESSAGEBOXW(L"Copyright (c) 2005-2015, Ross Smith II. MIT Licensed.");
                 break;
 			default:
 				// silently ignore invalid options
