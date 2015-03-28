@@ -20,8 +20,6 @@
 #include <shellapi.h>
 #include <tchar.h>
 
-#include "Stackwalker.h"
-#include "Optimize.h"
 #include "SystemMessage.h"
 #include "debug.h"
 #include "UpdatePathVariable.h"

@@ -58,7 +58,7 @@ TAG?=v$(VER)
 ## fails occasionally: http://timestamp.verisign.com/scripts/timstamp.dll
 TIMESTAMP_URL?=http://timestamp.globalsign.com/scripts/timstamp.dll
 VIRUSTOTAL_URL?=https://www.virustotal.com/vtapi/v2/file/scan
-ZIP_OPTS+=-9o
+ZIP_OPTS+=-9
 
 APP_FILES+=$(HASH_FILES)
 RELEASED:=.$(TAG).released
@@ -94,7 +94,7 @@ endif
 define FIND_SIGNTOOL
 
 ifndef SIGNTOOL
-	SDK_DIR:=$$(shell cygpath -m -s $(1) 2>/dev/null)
+	SDK_DIR:=$$(shell cygpath -m -s "$(1)" 2>/dev/null)
 	ifneq ($$(wildcard $$(SDK_DIR)/signtool.exe),)
 		SIGNTOOL:=$$(SDK_DIR)/signtool.exe
 	endif
@@ -158,13 +158,13 @@ UPLOADED_FILES=
 
 define UPLOAD_FILE
 
-.$(1).uploaded:	$(RELEASED)
+.$(1).uploaded:	$(1) $(RELEASED)
 	$(CURL) $(CURL_OPTS) \
 		--write-out "%{http_code}" \
 		--output /tmp/$(1).tmp \
 		--include \
 		"$(RELEASE_URL)/tags/$(TAG)" |\
-			grep ^2 || (cat /tmp/$(1).tmp ; echo ; exit 1)
+			grep -q ^2 || (cat /tmp/$(1).tmp ; echo ; exit 1)
 	sed -nr -e 's/.*upload_url": "(.*)\{.*/url=\1?name=$(1)/p' /tmp/$(1).tmp >/tmp/$(1).curlrc
 	$(CURL) $(CURL_OPTS) \
 		--request POST \
@@ -174,7 +174,7 @@ define UPLOAD_FILE
 		--output /tmp/$(1)-2.tmp \
 		--include \
 		--config /tmp/$(1).curlrc | \
-			grep ^2 || (cat /tmp/$(1)*.tmp ; echo ; exit 1)
+			grep -q ^2 || (cat /tmp/$(1)*.tmp ; echo ; exit 1)
 	-rm -f /tmp/$(1).tmp /tmp/$(1)-2.tmp
 	@-echo $(1) uploaded to Github
 	touch .$(1).uploaded
@@ -189,7 +189,7 @@ SCANNED_FILES=
 
 define SCAN_FILE
 
-.$(1).scanned: $(1)
+.$(2)-$(1).scanned: $(1)
 	test -n "$(VIRUSTOTAL_API_KEY)" || (echo VIRUSTOTAL_API_KEY not set >&2 ; exit 1)
 	$(CURL) $(CURL_OPTS) \
 		-X POST \
@@ -199,11 +199,11 @@ define SCAN_FILE
 		--output /tmp/$(1).tmp \
 		--include \
 		$(VIRUSTOTAL_URL) | \
-			grep ^201 || (cat /tmp/$(1).tmp ; echo ; exit 1)
+			grep -q ^2 || (cat /tmp/$(1).tmp ; echo ; exit 1)
 	-rm -f /tmp/$(1).tmp
-	touch .$(1).scanned
+	touch .$(2)-$(1).scanned
 
-SCANNED_FILES+=.$(1).scanned
+SCANNED_FILES+=.$(2)-$(1).scanned
 
 endef
 
@@ -296,7 +296,7 @@ dist:	zip
 TAGGED:=.$(TAG).tagged
 
 $(TAGGED):	$(APP_ZIP)
-	if ! git tag | grep -q -P "\b$(TAG)\b"; then
+	if ! git tag | grep -q -P "\b$(TAG)\b"; then \
 		git tag -a $(TAG) -m "Version $(VER)" ;\
 	fi
 	git push origin --tags
@@ -315,7 +315,7 @@ $(RELEASED):	$(TAGGED)
 		--write-out "%{http_code}" \
 		--output /tmp/$(RELEASED).tmp \
 		--include \
-		"$(RELEASE_URL)" | grep ^2 || (cat /tmp/$(RELEASED).tmp ; echo ; exit 1)
+		"$(RELEASE_URL)" | grep -q ^2 || (cat /tmp/$(RELEASED).tmp ; echo ; exit 1)
 	touch $@
 	@-echo Release $(TAG) created on Github
 
@@ -355,9 +355,9 @@ upload:	$(UPLOADED_FILES)
 
 #######################################################################
 
-$(eval $(call SCAN_FILE,$(APP_EXE)))
+$(eval $(call SCAN_FILE,$(APP_EXE),$(TAG)))
 
-$(eval $(call SCAN_FILE,$(APP_ZIP)))
+$(eval $(call SCAN_FILE,$(APP_ZIP),$(TAG)))
 
 .PHONY:	scan
 scan:	$(SCANNED_FILES)
@@ -371,7 +371,7 @@ publish:	$(UPLOADED_FILES) $(SCANNED_FILES)
 
 .PHONY:	tidy
 tidy:	clean
-	-rm -f  $(CLEANED_FILES) \
+	-rm -f  $(CLEAN_FILES) \
 		$(HASH_FILES) \
 		$(SIGNED_FILES) \
 		$(UPXED_FILES)
