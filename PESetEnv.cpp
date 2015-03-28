@@ -51,7 +51,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	int argc;
 	LPWSTR *argvw = CommandLineToArgvW(GetCommandLineW(), &argc);
 	LPSTR *argv = (LPSTR *) malloc(argc * sizeof(char *));
-	for (int i = 0; i < argc; ++i)
+	int i;
+	for (i = 0; i < argc; ++i)
 	{
 		int len2 = WideCharToMultiByte(CP_ACP, 0, argvw[i], -1, arg, len, NULL, NULL);
 		argv[i] = (LPSTR) malloc((len2 + 1) * sizeof(char));
@@ -98,7 +99,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			strcat(szCmdLineTemp, " ");
 	}
 
-	for (int i = 0; i < argc; ++i)
+	for (i = 0; i < argc; ++i)
 	{
 		free(argv[i]);
 	}
